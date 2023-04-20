@@ -1,0 +1,49 @@
+
+
+-- Services
+local uis = game:GetService("UserInputService")
+local rs = game:GetService("RunService")
+local context = game:GetService("ContextActionService")
+
+-- Player & Character
+local plr = game:GetService("Players").LocalPlayer
+
+-- Other
+local Camera = game:GetService("Workspace").CurrentCamera
+local mouse = plr:GetMouse()
+local cameraDB = false
+local zoomDB = false
+
+-- Values
+
+local xAngle = 0
+local yAngle = 0
+local cameraPos = Vector3.new(3.20, 0.75, 6)
+
+
+-- CAMERA SETTING --
+
+wait(0.01)
+Camera.CameraType = Enum.CameraType.Scriptable
+
+-- FUNCTIONS --
+
+context:BindAction("CameraMovement", function(_,_,input)
+	xAngle = xAngle - input.Delta.x*0.4
+	yAngle = math.clamp(yAngle - input.Delta.y*0.4,-80,80)
+end, false, Enum.UserInputType.MouseMovement)
+
+rs.RenderStepped:Connect(function()
+	local c = plr.Character or plr.CharacterAdded:Wait()
+	local rootPart = c:FindFirstChild("HumanoidRootPart")
+	
+	if c and rootPart then
+		local startCFrame = CFrame.new((rootPart.CFrame.p + Vector3.new(0,2,0)))*CFrame.Angles(0, math.rad(xAngle), 0)*CFrame.Angles(math.rad(yAngle), 0, 0)
+		
+		local cameraCFrame = startCFrame + startCFrame:VectorToWorldSpace(Vector3.new(cameraPos.X,cameraPos.Y,cameraPos.Z))
+		local cameraFocus = startCFrame + startCFrame:VectorToWorldSpace(Vector3.new(cameraPos.X,cameraPos.Y,-50000))
+		
+		Camera.CFrame = CFrame.new(cameraCFrame.p,cameraFocus.p)
+	end
+end)
+

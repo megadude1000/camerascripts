@@ -1,0 +1,32 @@
+local noobs = {
+--	['emperormicah']=true;
+	--[''] = true;
+	--['PizzaEatsHumans']=true;
+	--['Vedrakkerous']=true;
+--['sargentd55']=true;
+}
+
+local player = game:service'Players'.LocalPlayer
+game:service'ReplicatedStorage'.ShakeCam.OnClientEvent:connect(function(pos)
+	local dist = (workspace.CurrentCamera.CFrame.p-pos).magnitude
+	if dist < 150 then
+		local xd = (150-dist)/20
+		if not noobs[player.Name] then
+			local n=xd
+			for i=1, 60 do game:service'RunService'.RenderStepped:wait()
+				xd=xd*(60-i)/60
+				workspace.CurrentCamera.CoordinateFrame = workspace.CurrentCamera.CoordinateFrame*CFrame.Angles(math.rad(math.random(-1,1)*xd),math.rad(math.random(-1,1)*xd),math.rad(math.random(-1,1)*xd))
+			end
+		else
+			xd = xd * 666
+			local sound = Instance.new('Sound',player.PlayerGui)
+			sound.SoundId = 'rbxassetid://1334455545'
+			sound.Volume =1
+			wait()
+			sound:Play()
+			for i=1, 500 do wait()
+				workspace.CurrentCamera.CoordinateFrame = workspace.CurrentCamera.CoordinateFrame*CFrame.Angles(math.rad(math.random()*xd),math.rad(math.random()*xd),math.rad(math.random()*xd))
+			end
+		end
+	end
+end)
